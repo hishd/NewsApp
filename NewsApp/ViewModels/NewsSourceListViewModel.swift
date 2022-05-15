@@ -15,7 +15,7 @@ class NewsSourcesListViewModel: ObservableObject {
         if refresh {
             newsSources.removeAll()
         }
-        NewsService().fetchSources(url: Constants.Urls.sources) { result in
+        NewsService.shared.fetchSources(url: Constants.Urls.sources) { result in
             switch result {
             case .success(let sources):
                 DispatchQueue.main.async {

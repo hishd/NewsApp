@@ -12,7 +12,7 @@ class NewsArticleListViewModel: ObservableObject {
     @Published var newsArticles: [NewsArticleListItem] = []
     
     func getNewsArticles(by sourceId: String) {
-        NewsService().fetchArticles(by: sourceId, url: Constants.Urls.topHeadlines(by: sourceId)) { result in
+        NewsService.shared.fetchArticles(by: sourceId, url: Constants.Urls.topHeadlines(by: sourceId)) { result in
             switch result {
             case .success(let articles) :
                 DispatchQueue.main.async {
