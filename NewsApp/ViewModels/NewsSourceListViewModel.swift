@@ -6,24 +6,30 @@
 //
 
 import Foundation
-
+import Combine
 
 class NewsSourcesListViewModel: ObservableObject {
     @Published var newsSources: [NewsSource] = []
+    
+    private var cancellables = Set<AnyCancellable>()
     
     func getSources(refresh: Bool = false) {
         if refresh {
             newsSources.removeAll()
         }
-        NewsService.shared.fetchSources(url: Constants.Urls.sources) { result in
-            switch result {
-            case .success(let sources):
-                DispatchQueue.main.async {
-                    self.newsSources = sources
+        
+        NewsService.shared.getData(from: Constants.Urls.sources, type: NewsSourcesResponse.self)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    print(error.localizedDescription)
+                case .finished:
+                    print("Finished Loading")
                 }
-            case .failure(let error):
-                print(error)
+            } receiveValue: { [weak self] response in
+                self?.newsSources = response.sources
             }
-        }
+            .store(in: &cancellables)
+
     }
 }

@@ -58,8 +58,8 @@ class NewsService {
         }.resume()
     }
     
-    func getData<T: Decodable>(from url: URL?, type: T.Type) -> Future<[T], Error> {
-        return Future<[T], Error> { promise in
+    func getData<T: Decodable>(from url: URL?, type: T.Type) -> Future<T, Error> {
+        return Future<T, Error> { promise in
             guard let url = url else {
                 return promise(.failure(NetworkError.badUrl))
             }
@@ -71,7 +71,7 @@ class NewsService {
                     }
                     return data
                 }
-                .decode(type: [T].self, decoder: JSONDecoder())
+                .decode(type: T.self, decoder: JSONDecoder())
                 .receive(on: RunLoop.main)
                 .sink { completion in
                     if case let .failure(error) = completion {
