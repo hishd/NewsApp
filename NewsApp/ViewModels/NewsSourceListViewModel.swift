@@ -17,6 +17,16 @@ class NewsSourcesListViewModel: ObservableObject {
         if refresh {
             newsSources.removeAll()
         }
+//        NewsService.shared.fetchSources(url: Constants.Urls.sources) { result in
+//            switch result {
+//            case .success(let sources):
+//                DispatchQueue.main.async {
+//                    self.newsSources = sources
+//                }
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
         
         NewsService.shared.getData(from: Constants.Urls.sources, type: NewsSourcesResponse.self)
             .sink { completion in
